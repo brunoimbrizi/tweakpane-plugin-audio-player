@@ -1,4 +1,3 @@
-import {TemplateInputPlugin} from './plugin';
+import {AudioPlayerBladePlugin} from './plugin';
 
-// Export your plugin(s) as constant `plugins`
-export const plugins = [TemplateInputPlugin];
+export const plugins = [AudioPlayerBladePlugin];

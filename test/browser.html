@@ -16,11 +16,10 @@
 		// Register plugin
 		pane.registerPlugin(TweakpaneTemplatePlugin);
 
-		// TODO: Update parameters for your plugin
-		pane.addInput(params, 'prop', {
-			view: 'dots',
-		}).on('change', (ev) => {
-			console.log(ev.value);
+		pane.addBlade({
+			view: 'audio-player',
+			label: 'track',
+			source: 'other.mp3',
 		});
 
 		window.pane = pane;

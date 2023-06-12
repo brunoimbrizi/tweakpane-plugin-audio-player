@@ -1,80 +1,76 @@
-import {ClassName, mapRange, Value, View, ViewProps} from '@tweakpane/core';
+import {
+	bindValueMap,
+	ClassName,
+	isEmpty,
+	removeChildNodes,
+	ValueMap,
+	View,
+	ViewProps,
+
+	NumberTextView,
+	SliderView,
+} from '@tweakpane/core';
+
+export type PluginPropsObject = {
+	source: string;
+};
+
+export type PluginProps = ValueMap<PluginPropsObject>;
 
 interface Config {
-	value: Value<number>;
+	props: PluginProps;
 	viewProps: ViewProps;
 }
 
-// Create a class name generator from the view name
-// ClassName('tmp') will generate a CSS class name like `tp-tmpv`
-const className = ClassName('tmp');
+const className = ClassName('plyr');
 
-// Custom view class should implement `View` interface
 export class PluginView implements View {
 	public readonly element: HTMLElement;
-	private value_: Value<number>;
-	private dotElems_: HTMLElement[] = [];
-	private textElem_: HTMLElement;
+	public readonly audio: HTMLMediaElement;
+	public readonly btnPlayPause: HTMLElement;
+
+	// private readonly sliderView_: SliderView;
+	// private readonly textView_: NumberTextView;
 
 	constructor(doc: Document, config: Config) {
-		// Create a root element for the plugin
 		this.element = doc.createElement('div');
 		this.element.classList.add(className());
-		// Bind view props to the element
 		config.viewProps.bindClassModifiers(this.element);
 
-		// Receive the bound value from the controller
-		this.value_ = config.value;
-		// Handle 'change' event of the value
-		this.value_.emitter.on('change', this.onValueChange_.bind(this));
+		const source = config.props.value('source');
 
-		// Create child elements
-		this.textElem_ = doc.createElement('div');
-		this.textElem_.classList.add(className('text'));
-		this.element.appendChild(this.textElem_);
+		this.audio = doc.createElement('audio');
+		this.audio.src = source.rawValue;
 
-		// Apply the initial value
-		this.refresh_();
+		this.btnPlayPause = doc.createElement('button');
+		this.btnPlayPause.innerText = 'PLAY';
+		this.element.appendChild(this.btnPlayPause);
+
+		const onPlayPause = () => {
+			if (this.audio.paused) this.audio.play();
+			else this.audio.pause();
+		};
+
+		this.btnPlayPause.addEventListener('click', onPlayPause);
+
+
+
+		/*
+		const sliderElem = doc.createElement('div');
+		sliderElem.classList.add(className('s'));
+		this.sliderView_ = config.sliderView;
+		sliderElem.appendChild(this.sliderView_.element);
+		this.element.appendChild(sliderElem);
+
+		const textElem = doc.createElement('div');
+		textElem.classList.add(className('t'));
+		this.textView_ = config.textView;
+		textElem.appendChild(this.textView_.element);
+		this.element.appendChild(textElem);
+		*/
 
 		config.viewProps.handleDispose(() => {
 			// Called when the view is disposing
-			console.log('TODO: dispose view');
 		});
-	}
-
-	private refresh_(): void {
-		const rawValue = this.value_.rawValue;
-
-		this.textElem_.textContent = rawValue.toFixed(2);
-
-		while (this.dotElems_.length > 0) {
-			const elem = this.dotElems_.shift();
-			if (elem) {
-				this.element.removeChild(elem);
-			}
-		}
-
-		const doc = this.element.ownerDocument;
-		const dotCount = Math.floor(rawValue);
-		for (let i = 0; i < dotCount; i++) {
-			const dotElem = doc.createElement('div');
-			dotElem.classList.add(className('dot'));
-
-			if (i === dotCount - 1) {
-				const fracElem = doc.createElement('div');
-				fracElem.classList.add(className('frac'));
-				const frac = rawValue - Math.floor(rawValue);
-				fracElem.style.width = `${frac * 100}%`;
-				fracElem.style.opacity = String(mapRange(frac, 0, 1, 1, 0.2));
-				dotElem.appendChild(fracElem);
-			}
-
-			this.dotElems_.push(dotElem);
-			this.element.appendChild(dotElem);
-		}
-	}
-
-	private onValueChange_() {
-		this.refresh_();
 	}
 }
