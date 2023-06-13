@@ -18,6 +18,7 @@ export type PluginPropsObject = {
 export type PluginProps = ValueMap<PluginPropsObject>;
 
 interface Config {
+	sliderView: SliderView;
 	props: PluginProps;
 	viewProps: ViewProps;
 }
@@ -29,7 +30,7 @@ export class PluginView implements View {
 	public readonly audio: HTMLMediaElement;
 	public readonly btnPlayPause: HTMLElement;
 
-	// private readonly sliderView_: SliderView;
+	private readonly sliderView_: SliderView;
 	// private readonly textView_: NumberTextView;
 
 	constructor(doc: Document, config: Config) {
@@ -55,13 +56,13 @@ export class PluginView implements View {
 
 
 
-		/*
 		const sliderElem = doc.createElement('div');
 		sliderElem.classList.add(className('s'));
 		this.sliderView_ = config.sliderView;
 		sliderElem.appendChild(this.sliderView_.element);
 		this.element.appendChild(sliderElem);
 
+		/*
 		const textElem = doc.createElement('div');
 		textElem.classList.add(className('t'));
 		this.textView_ = config.textView;

@@ -1,6 +1,8 @@
 import {
 	BaseBladeParams,
 	BladePlugin,
+	createValue,
+	DefiniteRangeConstraint,
 	LabelController,
 	LabelPropsObject,
 	ParamsParsers,
@@ -34,7 +36,21 @@ export const AudioPlayerBladePlugin: BladePlugin<PluginBladeParams> = {
 	},
 
 	controller(args) {
+		const initialValue = 0;
+		const drc = new DefiniteRangeConstraint({
+			max: 100,
+			min: 0,
+		});
+
 		const controller = new PluginController(args.document, {
+			baseStep: 1,
+			sliderProps: new ValueMap({
+				maxValue: drc.values.value('max'),
+				minValue: drc.values.value('min'),
+			}),
+			value: createValue(initialValue, {
+				constraint: drc,
+			}),
 			props: ValueMap.fromObject<PluginPropsObject>({
 				source: args.params.source,
 			}),
