@@ -6,6 +6,62 @@
 	// Extend a general input view style
 	// @extend %input;
 
-	display: grid;
-	grid-template-columns: 50px auto;
+	display: flex;
+
+	&_w {
+		flex: 2;
+		display: flex;
+	}
+
+	&_wb {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		margin-left: 6px;
+	}
+
+	&_wt {
+		flex: 1;
+		margin-left: 4px;
+	}
+
+	&_b {
+		&.play {
+		  width: 12px;
+		  height: 12px;
+		  box-sizing: border-box;
+		  border-style: solid;
+		  border-width: 6px 0px 6px 12px;
+		  border-color: transparent transparent transparent var(--btn-bg);
+		  /*transition: all 100ms ease-in-out;*/
+		}
+
+		&.pause {
+		  border-style: double;
+		  border-width: 0px 0px 0px 10px;
+		}
+	}
+
+	&_s {
+		flex: 3;
+
+		.tp-sldv_k::after {
+			display: none;
+		}
+
+		.tp-sldv_t {
+			margin: 0;
+		}
+	}
+
+	&_t {
+		box-sizing: border-box;
+		color: var(--lbl-fg);
+		font-family: inherit;
+		height: var(--bld-us);
+		line-height: var(--bld-us);
+		min-width: 0;
+		padding: 0 4px;
+		text-align: right;
+	}
 }
