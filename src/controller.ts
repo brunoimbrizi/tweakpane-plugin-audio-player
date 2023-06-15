@@ -1,4 +1,10 @@
-import {Controller, ViewProps, Value, SliderController, SliderProps} from '@tweakpane/core';
+import {
+	Controller,
+	SliderController,
+	SliderProps,
+	Value,
+	ViewProps,
+} from '@tweakpane/core';
 
 import {PluginProps, PluginView} from './view';
 
@@ -23,7 +29,6 @@ export class PluginController implements Controller<PluginView> {
 		this.props = config.props;
 		this.viewProps = config.viewProps;
 		this.value = config.value;
-		
 
 		this.sliderC_ = new SliderController(doc, {
 			baseStep: config.baseStep,

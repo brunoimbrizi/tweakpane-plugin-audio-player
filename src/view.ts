@@ -1,14 +1,9 @@
 import {
-	bindValueMap,
 	ClassName,
-	isEmpty,
-	removeChildNodes,
+	SliderView,
 	ValueMap,
 	View,
 	ViewProps,
-
-	NumberTextView,
-	SliderView,
 } from '@tweakpane/core';
 
 export type PluginPropsObject = {
@@ -28,11 +23,13 @@ const className = ClassName('plyr');
 export class PluginView implements View {
 	public readonly element: HTMLElement;
 	public readonly audio: HTMLMediaElement;
-	public readonly btnPlayPause: HTMLElement;
 
+	private readonly btnPlayPause: HTMLElement;
+	private readonly elapsed: HTMLElement;
 	private readonly sliderView_: SliderView;
 
 	constructor(doc: Document, config: Config) {
+		// UI
 		this.element = doc.createElement('div');
 		this.element.classList.add(className());
 		config.viewProps.bindClassModifiers(this.element);
@@ -53,20 +50,7 @@ export class PluginView implements View {
 		btn.classList.add(className('b'));
 		btn.classList.add('play');
 		wrapBtn.appendChild(btn);
-
-		const onPlayPause = () => {
-			if (this.audio.paused) {
-				this.audio.play();
-				btn.classList.add('pause');
-			}
-			else {
-				this.audio.pause();
-				btn.classList.remove('pause');
-			}
-		};
-
-		btn.addEventListener('click', onPlayPause);
-
+		this.btnPlayPause = btn;
 
 		const slider = doc.createElement('div');
 		slider.classList.add(className('s'));
@@ -78,24 +62,57 @@ export class PluginView implements View {
 		elapsed.classList.add(className('t'));
 		elapsed.innerText = '00:00';
 		wrapTxt.appendChild(elapsed);
+		this.elapsed = elapsed;
 
-
-		const formatTime = (duration) => {
-			const min = ~~(duration / 60);
-			const sec = ~~(duration % 60);
-			return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-		};	
-
+		// AUDIO
 		const source = config.props.value('source');
 
 		this.audio = doc.createElement('audio');
-		// this.audio.addEventListener('loadedmetadata', () => elapsed.innerText = formatTime(this.audio.duration));
-		this.audio.addEventListener('timeupdate', () => {
-			const t = this.audio.currentTime / this.audio.duration;
-			this.sliderView_.value.setRawValue(t * 100);
-			elapsed.innerText = formatTime(this.audio.currentTime);
-		});
 		this.audio.src = source.rawValue;
 
+		// EVENT LISTENERS
+		this.btnPlayPause.addEventListener('click', this.onPlayPause_.bind(this));
+
+		this.audio.addEventListener('timeupdate', this.onTimeUpdate_.bind(this));
+		this.audio.addEventListener('ended', this.onEnded_.bind(this));
+
+		this.sliderView_.value.emitter.on(
+			'change',
+			this.onSliderChange_.bind(this),
+		);
+	}
+
+	private formatTime_(duration: number): string {
+		const min = ~~(duration / 60);
+		const sec = ~~(duration % 60);
+		return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+	}
+
+	private onPlayPause_(): void {
+		if (this.audio.paused) {
+			this.audio.play();
+			this.btnPlayPause.classList.add('pause');
+		} else {
+			this.audio.pause();
+			this.btnPlayPause.classList.remove('pause');
+		}
+	}
+
+	private onSliderChange_(e: any): void {
+		const isPointerDown = !e.options.forceEmit && !e.options.last;
+		if (!isPointerDown) return;
+
+		const t = e.rawValue / 100;
+		this.audio.currentTime = this.audio.duration * t;
+	}
+
+	private onTimeUpdate_(): void {
+		const t = this.audio.currentTime / this.audio.duration;
+		this.sliderView_.value.setRawValue(t * 100);
+		this.elapsed.innerText = this.formatTime_(this.audio.currentTime);
+	}
+
+	private onEnded_(): void {
+		this.btnPlayPause.classList.remove('pause');
 	}
 }
