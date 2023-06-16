@@ -1,11 +1,21 @@
 {
-  "name": "tweakpane-plugin-template",
-  "version": "0.0.0",
+  "name": "tweakpane-plugin-audio-player",
+  "version": "0.0.1",
   "description": "Plugin template for Tweakpane",
-  "main": "dist/tweakpane-plugin-template.js",
+  "main": "dist/tweakpane-plugin-audio-player.js",
   "types": "dist/types/index.d.ts",
-  "author": "cocopon",
+  "author": "brunoimbrizi",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brunoimbrizi/tweakpane-plugin-audio-player.git"
+  },
+  "keywords": [
+    "tweakpane",
+    "tweakpane-plugin",
+    "audio",
+    "player"
+  ],
   "files": [
     "dist"
   ],

@@ -6,20 +6,18 @@
 </head>
 <body>
 	<script src="../node_modules/tweakpane/dist/tweakpane.js"></script>
-	<script src="../dist/tweakpane-plugin-template.js"></script>
+	<script src="../dist/tweakpane-plugin-audio-player.js"></script>
 	<script>
-		const params = {
-			prop: 3,
-		};
 		const pane = new Tweakpane.Pane();
 
 		// Register plugin
-		pane.registerPlugin(TweakpaneTemplatePlugin);
+		pane.registerPlugin(TweakpaneAudioPlayerPlugin);
 
 		pane.addBlade({
 			view: 'audio-player',
 			label: 'track',
-			source: 'other.mp3',
+			source: 'https://archive.org/download/acidplanet-audio-00912483/00912483.ogg',
+			// source: 'other.mp3',
 		});
 
 		window.pane = pane;

@@ -10,4 +10,8 @@ export class PluginApi extends BladeApi<LabelController<PluginController>> {
 	set label(label: string | null | undefined) {
 		this.controller_.props.set('label', label);
 	}
+
+	get audio(): HTMLMediaElement {
+		return this.controller_.valueController.view.audio;
+	}
 }

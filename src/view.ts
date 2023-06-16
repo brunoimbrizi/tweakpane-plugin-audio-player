@@ -24,7 +24,8 @@ export class PluginView implements View {
 	public readonly element: HTMLElement;
 	public readonly audio: HTMLMediaElement;
 
-	private readonly btnPlayPause: HTMLElement;
+	private readonly btn: HTMLElement;
+	private readonly wrapBtn: HTMLElement;
 	private readonly elapsed: HTMLElement;
 	private readonly sliderView_: SliderView;
 
@@ -41,6 +42,7 @@ export class PluginView implements View {
 		const wrapBtn = doc.createElement('div');
 		wrapBtn.classList.add(className('wb'));
 		wrapBtnSld.appendChild(wrapBtn);
+		this.wrapBtn = wrapBtn;
 
 		const wrapTxt = doc.createElement('div');
 		wrapTxt.classList.add(className('wt'));
@@ -50,7 +52,7 @@ export class PluginView implements View {
 		btn.classList.add(className('b'));
 		btn.classList.add('play');
 		wrapBtn.appendChild(btn);
-		this.btnPlayPause = btn;
+		this.btn = btn;
 
 		const slider = doc.createElement('div');
 		slider.classList.add(className('s'));
@@ -71,10 +73,12 @@ export class PluginView implements View {
 		this.audio.src = source.rawValue;
 
 		// EVENT LISTENERS
-		this.btnPlayPause.addEventListener('click', this.onPlayPause_.bind(this));
+		this.wrapBtn.addEventListener('click', this.onPlayPause_.bind(this));
 
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate_.bind(this));
 		this.audio.addEventListener('ended', this.onEnded_.bind(this));
+		this.audio.addEventListener('play', this.onPlay_.bind(this));
+		this.audio.addEventListener('pause', this.onPause_.bind(this));
 
 		this.sliderView_.value.emitter.on(
 			'change',
@@ -88,14 +92,9 @@ export class PluginView implements View {
 		return `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 	}
 
-	private onPlayPause_(): void {
-		if (this.audio.paused) {
-			this.audio.play();
-			this.btnPlayPause.classList.add('pause');
-		} else {
-			this.audio.pause();
-			this.btnPlayPause.classList.remove('pause');
-		}
+	private async onPlayPause_(): Promise<void> {
+		if (this.audio.paused) await this.audio.play();
+		else this.audio.pause();
 	}
 
 	private onSliderChange_(e: any): void {
@@ -106,6 +105,14 @@ export class PluginView implements View {
 		this.audio.currentTime = this.audio.duration * t;
 	}
 
+	private onPlay_(): void {
+		this.btn.classList.add('pause');
+	}
+
+	private onPause_(): void {
+		this.btn.classList.remove('pause');
+	}
+
 	private onTimeUpdate_(): void {
 		const t = this.audio.currentTime / this.audio.duration;
 		this.sliderView_.value.setRawValue(t * 100);
@@ -113,6 +120,6 @@ export class PluginView implements View {
 	}
 
 	private onEnded_(): void {
-		this.btnPlayPause.classList.remove('pause');
+		this.btn.classList.remove('pause');
 	}
 }
