@@ -73,7 +73,10 @@ export class PluginView implements View {
 		// EVENT LISTENERS
 		this.wrapBtn.addEventListener('click', this.onPlayPause_.bind(this));
 
-		this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata.bind(this));
+		this.audio.addEventListener(
+			'loadedmetadata',
+			this.onLoadedMetadata.bind(this),
+		);
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate_.bind(this));
 		this.audio.addEventListener('ended', this.onEnded_.bind(this));
 		this.audio.addEventListener('play', this.onPlay_.bind(this));
