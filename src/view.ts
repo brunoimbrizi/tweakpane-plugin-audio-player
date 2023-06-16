@@ -16,6 +16,7 @@ interface Config {
 	sliderView: SliderView;
 	props: PluginProps;
 	viewProps: ViewProps;
+	audio: HTMLMediaElement;
 }
 
 const className = ClassName('plyr');
@@ -67,14 +68,12 @@ export class PluginView implements View {
 		this.elapsed = elapsed;
 
 		// AUDIO
-		const source = config.props.value('source');
-
-		this.audio = doc.createElement('audio');
-		this.audio.src = source.rawValue;
+		this.audio = config.audio;
 
 		// EVENT LISTENERS
 		this.wrapBtn.addEventListener('click', this.onPlayPause_.bind(this));
 
+		this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata.bind(this));
 		this.audio.addEventListener('timeupdate', this.onTimeUpdate_.bind(this));
 		this.audio.addEventListener('ended', this.onEnded_.bind(this));
 		this.audio.addEventListener('play', this.onPlay_.bind(this));
@@ -110,6 +109,11 @@ export class PluginView implements View {
 	}
 
 	private onPause_(): void {
+		this.btn.classList.remove('pause');
+	}
+
+	private onLoadedMetadata(): void {
+		this.audio.currentTime = 0;
 		this.btn.classList.remove('pause');
 	}
 

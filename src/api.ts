@@ -12,6 +12,15 @@ export class PluginApi extends BladeApi<LabelController<PluginController>> {
 	}
 
 	get audio(): HTMLMediaElement {
-		return this.controller_.valueController.view.audio;
+		return this.controller_.valueController.audio;
+	}
+
+	get source(): string {
+		return this.controller_.valueController.props.get('source');
+	}
+
+	set source(value: string) {
+		this.controller_.valueController.props.set('source', value);
+		this.audio.src = value;
 	}
 }

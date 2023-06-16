@@ -22,6 +22,7 @@ export class PluginController implements Controller<PluginView> {
 	public readonly view: PluginView;
 	public readonly viewProps: ViewProps;
 
+	public readonly audio: HTMLMediaElement;
 	public readonly value: Value<number>;
 	private readonly sliderC_: SliderController;
 
@@ -29,6 +30,9 @@ export class PluginController implements Controller<PluginView> {
 		this.props = config.props;
 		this.viewProps = config.viewProps;
 		this.value = config.value;
+
+		this.audio = doc.createElement('audio');
+		this.audio.src = config.props.value('source').rawValue;
 
 		this.sliderC_ = new SliderController(doc, {
 			baseStep: config.baseStep,
@@ -41,6 +45,7 @@ export class PluginController implements Controller<PluginView> {
 			sliderView: this.sliderC_.view,
 			props: this.props,
 			viewProps: this.viewProps,
+			audio: this.audio,
 		});
 	}
 }

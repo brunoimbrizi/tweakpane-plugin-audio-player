@@ -1,6 +1,6 @@
 {
   "name": "tweakpane-plugin-audio-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Plugin template for Tweakpane",
   "main": "dist/tweakpane-plugin-audio-player.js",
   "types": "dist/types/index.d.ts",
