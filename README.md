@@ -1,7 +1,7 @@
 # Tweakpane plugin audio player
 A mini audio player for [Tweakpane][tweakpane]. Sometimes you just want all of your UI in one place.
 
-![tweakpane-plugin-audio-player-title](https://github.com/brunoimbrizi/tweakpane-plugin-audio-player/assets/880280/c5f513f3-023e-4ab6-8fc3-ff8380f5d15e)
+![tweakpane-plugin-audio-player-title](https://github.com/brunoimbrizi/tweakpane-plugin-audio-player/assets/880280/09c51ecb-869e-4650-9f78-74e6b1cedce5)
 
 
 ## Demo
