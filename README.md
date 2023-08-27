@@ -36,11 +36,14 @@ pane.registerPlugin(AudioPlayerPlugin);
 
 ## Usage
 ```js
-pane.addBlade({
+const audioBlade = pane.addBlade({
   view: 'audio-player',
   label: 'track',
   source: 'drum-intro.mp3'
 });
+
+// access the <audio> element directly
+// audioBlade.audio
 ```
 
 
